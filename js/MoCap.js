@@ -85,15 +85,15 @@ let model,
   skeleton_helper;
 let mesh_joint, mesh_surface;
 const loader = new GLTFLoader();
-loader.load("../model/Xbot.glb", function (gltf) {
+loader.load("../model/unionAvatar.glb", function (gltf) {
   model = gltf.scene;
   scene.add(model);
   let bones = [];
   model.traverse(function (object) {
     if (object.isMesh) {
       object.castShadow = true;
-      if (object.name == "Beta_Joints") mesh_joint = object;
-      if (object.name == "Beta_Surface") mesh_surface = object;
+      // if (object.name == "Beta_Joints") mesh_joint = object;
+      // if (object.name == "Beta_Surface") mesh_surface = object;
     }
     if (object.isBone) {
       bones.push(object);
@@ -110,8 +110,8 @@ loader.load("../model/Xbot.glb", function (gltf) {
   skeleton_helper.visible = true;
 
   scene.add(skeleton_helper);
-  scene.add(mesh_joint);
-  scene.add(mesh_surface);
+  // scene.add(mesh_joint);
+  // scene.add(mesh_surface);
 });
 
 let name_to_index = {
@@ -372,6 +372,8 @@ function onResults2(results) {
     joint_model_child,
     R_chain
   ) {
+    if (!joint_model_child) return
+    
     const v = new THREE.Vector3()
       .subVectors(joint_mp_child, joint_mp)
       .normalize();
@@ -510,10 +512,10 @@ function onResults2(results) {
     const jointRightUpLeg = pos_3d_landmarks["right_hip"];
     const jointSpine0 = newJoints3D["spine0"];
 
-    const boneHips = skeleton.getBoneByName("mixamorigHips");
-    const boneLeftUpLeg = skeleton.getBoneByName("mixamorigLeftUpLeg");
-    const boneRightUpLeg = skeleton.getBoneByName("mixamorigRightUpLeg");
-    const boneSpine0 = skeleton.getBoneByName("mixamorigSpine");
+    const boneHips = skeleton.getBoneByName("Hips");
+    const boneLeftUpLeg = skeleton.getBoneByName("LeftUpLeg");
+    const boneRightUpLeg = skeleton.getBoneByName("RightUpLeg");
+    const boneSpine0 = skeleton.getBoneByName("Spine");
 
     const v_HiptoLeft = new THREE.Vector3()
       .subVectors(jointLeftUpLeg, jointHips)
@@ -558,8 +560,8 @@ function onResults2(results) {
     R_chain_neck.multiply(R_Hips);
     const jointNeck = newJoints3D["neck"];
     const jointHead = newJoints3D["head"];
-    const boneNeck = skeleton.getBoneByName("mixamorigNeck");
-    const boneHead = skeleton.getBoneByName("mixamorigHead");
+    const boneNeck = skeleton.getBoneByName("Neck");
+    const boneHead = skeleton.getBoneByName("Head");
     SetRbyCalculatingJoints(
       jointNeck,
       jointHead,
@@ -569,8 +571,8 @@ function onResults2(results) {
     );
     const jointLeftEye = pos_3d_landmarks["left_eye"];
     const jointRightEye = pos_3d_landmarks["right_eye"];
-    const boneLeftEye = skeleton.getBoneByName("mixamorigLeftEye");
-    const boneRightEye = skeleton.getBoneByName("mixamorigRightEye");
+    const boneLeftEye = skeleton.getBoneByName("LeftEye");
+    const boneRightEye = skeleton.getBoneByName("RightEye");
     const v_LeftEye = new THREE.Vector3()
       .subVectors(jointLeftEye, jointHead)
       .normalize();
@@ -604,10 +606,10 @@ function onResults2(results) {
     const jointLeftElbow = pos_3d_landmarks["left_elbow"];
     const jointLeftWrist = pos_3d_landmarks["left_wrist"];
 
-    const boneLeftShoulder = skeleton.getBoneByName("mixamorigLeftShoulder");
-    const boneLeftArm = skeleton.getBoneByName("mixamorigLeftArm");
-    const boneLeftForeArm = skeleton.getBoneByName("mixamorigLeftForeArm");
-    const boneLeftHand = skeleton.getBoneByName("mixamorigLeftHand");
+    const boneLeftShoulder = skeleton.getBoneByName("LeftShoulder");
+    const boneLeftArm = skeleton.getBoneByName("LeftArm");
+    const boneLeftForeArm = skeleton.getBoneByName("LeftForeArm");
+    const boneLeftHand = skeleton.getBoneByName("LeftHand");
 
     SetRbyCalculatingJoints(
       jointLeftShoulder_inside,
@@ -639,10 +641,10 @@ function onResults2(results) {
     const jointRightElbow = pos_3d_landmarks["right_elbow"];
     const jointRightWrist = pos_3d_landmarks["right_wrist"];
 
-    const boneRightShoulder = skeleton.getBoneByName("mixamorigRightShoulder");
-    const boneRightArm = skeleton.getBoneByName("mixamorigRightArm");
-    const boneRightForeArm = skeleton.getBoneByName("mixamorigRightForeArm");
-    const boneRightHand = skeleton.getBoneByName("mixamorigRightHand");
+    const boneRightShoulder = skeleton.getBoneByName("RightShoulder");
+    const boneRightArm = skeleton.getBoneByName("RightArm");
+    const boneRightForeArm = skeleton.getBoneByName("RightForeArm");
+    const boneRightHand = skeleton.getBoneByName("RightHand");
 
     SetRbyCalculatingJoints(
       jointRightShoulder_inside,
@@ -674,10 +676,10 @@ function onResults2(results) {
     const jointLeftToeBase = newJoints3D["left_toebase"];
     const jointLeftFoot = pos_3d_landmarks["left_foot_index"];
 
-    const boneLeftLeg = skeleton.getBoneByName("mixamorigLeftLeg");
-    const boneLeftFoot = skeleton.getBoneByName("mixamorigLeftFoot");
-    const boneLeftToeBase = skeleton.getBoneByName("mixamorigLeftToeBase");
-    const boneLeftToe_End = skeleton.getBoneByName("mixamorigLeftToe_End");
+    const boneLeftLeg = skeleton.getBoneByName("LeftLeg");
+    const boneLeftFoot = skeleton.getBoneByName("LeftFoot");
+    const boneLeftToeBase = skeleton.getBoneByName("LeftToeBase");
+    // const boneLeftToe_End = skeleton.getBoneByName("LeftToe_End");
     SetRbyCalculatingJoints(
       jointLeftUpLeg,
       jointLeftKnee,
@@ -699,13 +701,13 @@ function onResults2(results) {
       boneLeftToeBase,
       R_chain_leftlower
     );
-    SetRbyCalculatingJoints(
-      jointLeftToeBase,
-      jointLeftFoot,
-      boneLeftToeBase,
-      boneLeftToe_End,
-      R_chain_leftlower
-    );
+    // SetRbyCalculatingJoints(
+    //   jointLeftToeBase,
+    //   jointLeftFoot,
+    //   boneLeftToeBase,
+    //   boneLeftToe_End,
+    //   R_chain_leftlower
+    // );
     // Right upleg-leg-foot
     let R_chain_rightlower = new THREE.Matrix4().identity();
     R_chain_rightlower.multiply(R_Hips);
@@ -715,10 +717,10 @@ function onResults2(results) {
     const jointRightToeBase = newJoints3D["right_toebase"];
     const jointRightFoot = pos_3d_landmarks["right_foot_index"];
 
-    const boneRightLeg = skeleton.getBoneByName("mixamorigRightLeg");
-    const boneRightFoot = skeleton.getBoneByName("mixamorigRightFoot");
-    const boneRightToeBase = skeleton.getBoneByName("mixamorigRightToeBase");
-    const boneRightToe_End = skeleton.getBoneByName("mixamorigRightToe_End");
+    const boneRightLeg = skeleton.getBoneByName("RightLeg");
+    const boneRightFoot = skeleton.getBoneByName("RightFoot");
+    const boneRightToeBase = skeleton.getBoneByName("RightToeBase");
+    // const boneRightToe_End = skeleton.getBoneByName("RightToe_End");
 
     SetRbyCalculatingJoints(
       jointRightUpLeg,
@@ -741,13 +743,13 @@ function onResults2(results) {
       boneRightToeBase,
       R_chain_rightlower
     );
-    SetRbyCalculatingJoints(
-      jointRightToeBase,
-      jointRightFoot,
-      boneRightToeBase,
-      boneRightToe_End,
-      R_chain_rightlower
-    );
+    // SetRbyCalculatingJoints(
+    //   jointRightToeBase,
+    //   jointRightFoot,
+    //   boneRightToeBase,
+    //   boneRightToe_End,
+    //   R_chain_rightlower
+    // );
   }
   if (results.leftHandLandmarks) {
     let hand_landmarks_dict = {};
@@ -782,10 +784,10 @@ function onResults2(results) {
     const jointMiddle_mcp = hand_3d_landmarks["middle_finger_mcp"];
     const jointPinky_mcp = hand_3d_landmarks["pinky_finger_mcp"];
 
-    const boneHand = skeleton.getBoneByName("mixamorigLeftHand");
-    const boneIndex1 = skeleton.getBoneByName("mixamorigLeftHandIndex1");
-    const boneMiddle1 = skeleton.getBoneByName("mixamorigLeftHandMiddle1");
-    const bonePinky1 = skeleton.getBoneByName("mixamorigLeftHandPinky1");
+    const boneHand = skeleton.getBoneByName("LeftHand");
+    const boneIndex1 = skeleton.getBoneByName("LeftHandIndex1");
+    const boneMiddle1 = skeleton.getBoneByName("LeftHandMiddle1");
+    const bonePinky1 = skeleton.getBoneByName("LeftHandPinky1");
 
     const v_middle = new THREE.Vector3().subVectors(
       jointMiddle_mcp,
@@ -873,9 +875,9 @@ function onResults2(results) {
       let finger_point = finger + "_finger_" + bone_point_list[remainder];
       let next_point = finger + "_finger_" + bone_point_list[remainder + 1];
       let Bone =
-        "mixamorigLeftHand" + bone_list[quotient + 5] + (remainder + 1);
+        "LeftHand" + bone_list[quotient + 5] + (remainder + 1);
       let next_Bone =
-        "mixamorigLeftHand" + bone_list[quotient + 5] + (remainder + 2);
+        "LeftHand" + bone_list[quotient + 5] + (remainder + 2);
       let R = R_list[quotient];
       SetRbyCalculatingJoints(
         hand_3d_landmarks[finger_point],
@@ -919,10 +921,10 @@ function onResults2(results) {
     const jointMiddle_mcp = hand_3d_landmarks["middle_finger_mcp"];
     const jointPinky_mcp = hand_3d_landmarks["pinky_finger_mcp"];
 
-    const boneHand = skeleton.getBoneByName("mixamorigRightHand");
-    const boneIndex1 = skeleton.getBoneByName("mixamorigRightHandIndex1");
-    const boneMiddle1 = skeleton.getBoneByName("mixamorigRightHandMiddle1");
-    const bonePinky1 = skeleton.getBoneByName("mixamorigRightHandPinky1");
+    const boneHand = skeleton.getBoneByName("RightHand");
+    const boneIndex1 = skeleton.getBoneByName("RightHandIndex1");
+    const boneMiddle1 = skeleton.getBoneByName("RightHandMiddle1");
+    const bonePinky1 = skeleton.getBoneByName("RightHandPinky1");
 
     const v_middle = new THREE.Vector3().subVectors(
       jointMiddle_mcp,
@@ -1010,9 +1012,9 @@ function onResults2(results) {
       let finger_point = finger + "_finger_" + bone_point_list[remainder];
       let next_point = finger + "_finger_" + bone_point_list[remainder + 1];
       let Bone =
-        "mixamorigRightHand" + bone_list[quotient + 5] + (remainder + 1);
+        "RightHand" + bone_list[quotient + 5] + (remainder + 1);
       let next_Bone =
-        "mixamorigRightHand" + bone_list[quotient + 5] + (remainder + 2);
+        "RightHand" + bone_list[quotient + 5] + (remainder + 2);
       let R = R_list[quotient];
       SetRbyCalculatingJoints(
         hand_3d_landmarks[finger_point],
